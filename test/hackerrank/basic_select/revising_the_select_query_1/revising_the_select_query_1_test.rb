@@ -43,11 +43,15 @@ class RevisingTheSelectQuery1Test < Minitest::Test
 
     @client.query(insert_sql)
 
-    assert 2, count_by_sql("SELECT count(*) FROM city;")
+    path_of_query_sql_file = Pathname.new(dir_path).join('query.sql')
+    query_sql = File.read(path_of_query_sql_file)
+    result = @client.query(query_sql)
+    result = result.map{ |line| line.values.join(' ') }.join("\n")
+
+    path_of_expect_file = Pathname.new(dir_path).join('expect.txt')
+    expect_result = File.read(path_of_expect_file)
+
+    assert_equal result, expect_result
   end
 
-  def count_by_sql(sql)
-    results = @client.query(sql)
-    results.first.values.first
-  end
 end

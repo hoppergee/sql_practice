@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require 'pathname'
+require 'fileutils'
+require 'active_support'
+
+folder_path = ARGV[0]
+
+root_path= __dir__.sub('/bin', '')
+absolute_folder_path = Pathname.new(root_path).join(folder_path)
+basename = absolute_folder_path.basename
+
+raise "The #{basename} folder already exists." if Dir.exist?(absolute_folder_path)
+
+FileUtils.mkdir_p(absolute_folder_path)
+FileUtils.touch(absolute_folder_path.join('problem.md'))
+FileUtils.touch(absolute_folder_path.join('build.sql'))
+FileUtils.touch(absolute_folder_path.join('city.csv'))
+FileUtils.touch(absolute_folder_path.join('query.sql'))
+FileUtils.touch(absolute_folder_path.join('expect.txt'))
+FileUtils.touch(absolute_folder_path.join("#{basename}.rb"))
+
+File.open(absolute_folder_path.join("#{basename}.rb"), 'w') do |file|
+  file.write <<~Minitest_Content
+    class #{ActiveSupport::Inflector.camelize(basename)} < Base
+      def test_query
+        assert_equal result, expect_result
+      end
+    end
+    Minitest_Content
+end

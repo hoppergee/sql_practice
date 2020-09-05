@@ -7,3 +7,14 @@ services:
     image: hackerrank_tdd:1.0
     volumes:
       - .:/app
+  mysql:
+    build:
+      context: .
+      dockerfile: MySQL.Dockerfile
+    image: hackerrank_mysql
+    environment: 
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 3306
+    volumes:
+      - .:/app

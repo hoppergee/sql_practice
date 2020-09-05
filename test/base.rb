@@ -42,7 +42,7 @@ class Base < Minitest::Test
   end
 
   def build_database
-    connection.query('DROP DATABASE hackerrank')
+    connection.query('DROP DATABASE if exists hackerrank')
     connection.query('CREATE DATABASE hackerrank')
   end
 
@@ -74,7 +74,7 @@ class Base < Minitest::Test
 
   def connection
     @connection ||= Mysql2::Client.new(
-      host: 'localhost',
+      host: 'mysql',
       username: 'root',
       flags: Mysql2::Client::MULTI_STATEMENTS
     )
@@ -82,7 +82,7 @@ class Base < Minitest::Test
 
   def client
     @client ||= Mysql2::Client.new(
-      host: 'localhost',
+      host: 'mysql',
       username: 'root',
       database: 'hackerrank',
       flags: Mysql2::Client::MULTI_STATEMENTS

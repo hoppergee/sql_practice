@@ -54,15 +54,22 @@ class Base < Minitest::Test
   end
 
   def insert_data
+    Pathname.new(dir_path).glob('*.csv').each do |csv_path|
+      insert_one_table_data(csv_path.basename('.csv'))
+    end
+  end
+
+  def insert_one_table_data(table_name)
     build_insert_sql = ERB.new <<~INSERT_SQL
       load data infile '<%= path_of_csv %>'
-      into table city
+      into table <%= table_name %>
       fields terminated by ','
       enclosed by '"'
       lines terminated by '\n'
       ignore 1 rows;
     INSERT_SQL
-    path_of_csv = Pathname.new(dir_path).join('city.csv')
+    table_name = table_name
+    path_of_csv = Pathname.new(dir_path).join("#{table_name}.csv")
     insert_sql = build_insert_sql.result(binding)
 
     query(insert_sql)

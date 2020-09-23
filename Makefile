@@ -13,5 +13,7 @@ ps:
 # t:
 # 	docker-compose up -d tester
 # 	DISABLE_SPRING=1 docker-compose exec tester bundle exec rspec $(filter-out $@,$(MAKECMDGOALS))
+mysqlconsole:
+	docker-compose exec mysql mysql
 %:
 	@:
